@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kh40zz_Blog.sh</title>
+    <meta name="description" content="Personal terminal blog - Loading memories...">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <pre class="ascii-art">
+                
+
+          .                                                      .
+        .n                   .                 .                  n.
+  .   .dP                  dP                   9b                 9b.    .
+ 4    qXb         .       dX                     Xb       .        dXp     t
+dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
+9XXb._       _.dXXXXb dXXXXbo.                 .odXXXXb dXXXXb._       _.dXXP
+ 9XXXXXXXXXXXXXXXXXXXVXXXXXXXXOo.           .oOXXXXXXXXVXXXXXXXXXXXXXXXXXXXP
+  `9XXXXXXXXXXXXXXXXXXXXX'~   ~`OOO8b   d8OOO'~   ~`XXXXXXXXXXXXXXXXXXXXXP'
+    `9XXXXXXXXXXXP' `9XX'          `98v8P'          `XXP' `9XXXXXXXXXXXP'
+        ~~~~~~~       9X.          .db|db.          .XP       ~~~~~~~
+        )b.  .dbo.dP'`v'`9b.odb.  .dX(
+        ,dXXXXXXXXXXXb     dXXXXXXXXXXXb.
+        dXXXXXXXXXXXP'   .   `9XXXXXXXXXXXb
+        dXXXXXXXXXXXXb   d|b   dXXXXXXXXXXXXb
+        9XXb'   `XXXXXb.dX|Xb.dXXXXX'   `dXXP
+        `'      9XXXXXX(   )XXXXXXP      `'
+        XXXX X.`v'.X XXXX
+        XP^X'`b   d'`X^XX
+        X. 9  `   '  P )X
+        `b  `       '  d'
+                </pre>
+                <h1 class="main-title">./Kh40zz_Blog.sh</h1>
+                <p class="subtitle">&gt; Personal blog about hacking initialized...</p>
+                <p class="status">[STATUS] Loading Blog... Please wait...</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- About Section -->
+            <section class="about-section">
+                <div class="about-container">
+                    <div class="terminal-box">
+                        <h2 class="section-title">&gt; whoami</h2>
+                        <div class="terminal-text">
+                            <p>&gt; Hello, I am Kh40zz!</p>
+                            <p>&gt; Welcome to my blog about hacking and cybersecurity.</p>
+                            <p>&gt; I am a person who loves all about this awesome world and I have been in this since I was 16 years old.</p>
+                            <p>&gt; Now I am 20 years old and I would like to share my progress and knowledge from this world. :]</p>
+                        </div>
+            </section>
+
+            <!-- Added search and filter controls -->
+            <section class="controls-section">
+                <div class="controls-container">
+                    <div class="search-container">
+                        <h3 class="control-title">&gt; grep -i "search_term" ~/memories/*</h3>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="search memories..." 
+                            class="search-input"
+                        >
+                    </div>
+                    
+                    <div class="filter-container">
+                        <h3 class="control-title">&gt; filter --by-tag</h3>
+                        <div class="tag-filters">
+                            <button class="tag-filter active" data-tag="all">[ALL]</button>
+                        </div>
+                    </div>
+
+                    <!-- Added year filter section -->
+                    <div class="filter-container">
+                        <h3 class="control-title">&gt; filter --by-year</h3>
+                        <div class="year-filters">
+                            <button class="year-filter active" data-year="all">[ALL YEARS]</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Posts -->
+            <section class="posts-section">
+                <h2 class="posts-title">&gt; ls -la ~/recent_memories/</h2>
+                <div class="posts-grid" id="postsGrid">
+                                     
+                </div>
+
+                <!-- Added no results message -->
+                <div id="noResults" class="no-results" style="display: none;">
+                    <div class="terminal-box">
+                        <p>&gt; grep: no matches found</p>
+                        <p>&gt; try different search terms or tags...</p>
+                    </div>
+                </div>
+            </section>
+
+            
+          </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                &gt; © 2024 Terminal Blog v1.0 | Generated By 
+                <a href="https://nctnetwork.co.uk" target="_blank" rel="noopener noreferrer" class="footer-link">
+                    NCTNetwork
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const tagFilters = document.querySelectorAll('.tag-filter');
+            const yearFilters = document.querySelectorAll('.year-filter');
+            const postsGrid = document.getElementById('postsGrid');
+            const noResults = document.getElementById('noResults');
+            const cards = document.querySelectorAll('.card');
+
+            let currentTag = 'all';
+            let currentYear = 'all';
+            let currentSearch = '';
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                currentSearch = this.value.toLowerCase();
+                filterPosts();
+            });
+
+            // Tag filter functionality
+            tagFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remove active class from all tag filters
+                    tagFilters.forEach(f => f.classList.remove('active'));
+                    // Add active class to clicked filter
+                    this.classList.add('active');
+                    
+                    currentTag = this.dataset.tag;
+                    filterPosts();
+                });
+            });
+
+            // Year filter functionality
+            yearFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remove active class from all year filters
+                    yearFilters.forEach(f => f.classList.remove('active'));
+                    // Add active class to clicked filter
+                    this.classList.add('active');
+                    
+                    currentYear = this.dataset.year;
+                    filterPosts();
+                });
+            });
+
+            function filterPosts() {
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const cardTags = card.dataset.tags.split(',');
+                    const cardYear = card.dataset.year;
+                    const cardTitle = card.dataset.title.toLowerCase();
+                    const cardExcerpt = card.dataset.excerpt.toLowerCase();
+
+                    // Check tag filter
+                    const tagMatch = currentTag === 'all' || cardTags.includes(currentTag);
+                    
+                    // Check year filter
+                    const yearMatch = currentYear === 'all' || cardYear === currentYear;
+                    
+                    // Check search filter
+                    const searchMatch = currentSearch === '' || 
+                        cardTitle.includes(currentSearch) || 
+                        cardExcerpt.includes(currentSearch) ||
+                        cardTags.some(tag => tag.includes(currentSearch));
+
+                    if (tagMatch && yearMatch && searchMatch) {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show/hide no results message
+                if (visibleCount === 0) {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
+            }
+
+            // Terminal typing effect for search placeholder
+            const originalPlaceholder = searchInput.placeholder;
+            let placeholderIndex = 0;
+            let isDeleting = false;
+
+            function typePlaceholder() {
+                if (!isDeleting && placeholderIndex < originalPlaceholder.length) {
+                    searchInput.placeholder = originalPlaceholder.substring(0, placeholderIndex + 1) + '_';
+                    placeholderIndex++;
+                } else if (isDeleting && placeholderIndex > 0) {
+                    searchInput.placeholder = originalPlaceholder.substring(0, placeholderIndex - 1) + '_';
+                    placeholderIndex--;
+                } else {
+                    isDeleting = !isDeleting;
+                    if (!isDeleting) {
+                        setTimeout(typePlaceholder, 2000);
+                        return;
+                    }
+                }
+                
+                setTimeout(typePlaceholder, isDeleting ? 50 : 100);
+            }
+
+            // Start typing effect only if search is not focused
+            if (document.activeElement !== searchInput) {
+                setTimeout(typePlaceholder, 1000);
+            }
+
+            // Stop typing effect when focused
+            searchInput.addEventListener('focus', function() {
+                this.placeholder = originalPlaceholder;
+            });
+        });
+    </script>
+</body>
+</html>
+
