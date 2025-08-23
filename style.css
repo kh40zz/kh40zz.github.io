@@ -5,10 +5,10 @@
   box-sizing: border-box;
 }
 
+/* Added global anchor tag styling to remove underlines */
 a {
   text-decoration: none;
 }
-
 
 body {
   font-family: "JetBrains Mono", monospace;
@@ -65,9 +65,25 @@ body::before {
   white-space: pre;
 }
 
+.ascii-mobile {
+  display: block;
+}
+
+.ascii-desktop {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .ascii-art {
     font-size: 0.875rem;
+  }
+
+  .ascii-mobile {
+    display: none;
+  }
+
+  .ascii-desktop {
+    display: block;
   }
 }
 
@@ -520,6 +536,7 @@ body::before {
   color: #22c55e;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.875rem;
+  transition: border-color 0.2s;
 }
 
 .newsletter-input:focus {
@@ -697,6 +714,113 @@ body::before {
   font-weight: 700;
 }
 
+/* Image card styles */
+.image-card {
+  background: #000;
+  border: 2px solid #16a34a;
+  margin: 2rem 0;
+  transition: border-color 0.3s;
+}
+
+.image-card:hover {
+  border-color: #22c55e;
+}
+
+.image-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(34, 197, 94, 0.1);
+  border-bottom: 1px solid #16a34a;
+}
+
+.image-title {
+  color: #22c55e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.image-size {
+  color: #16a34a;
+  font-size: 0.625rem;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.image-container {
+  padding: 1rem;
+  text-align: center;
+}
+
+.article-image {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #16a34a;
+  transition: all 0.3s;
+}
+
+.article-image:hover {
+  border-color: #22c55e;
+  box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
+}
+
+.image-caption {
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 1px solid #16a34a;
+}
+
+.image-caption p {
+  color: #86efac;
+  font-size: 0.75rem;
+  font-style: italic;
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Small image card variant */
+.image-card-small .image-container {
+  padding: 0.75rem;
+}
+
+.image-card-small .article-image {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+/* Responsive image adjustments */
+@media (max-width: 768px) {
+  .image-card {
+    margin: 1.5rem 0;
+  }
+
+  .image-header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .image-container {
+    padding: 0.75rem;
+  }
+
+  .image-caption {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .image-title {
+    font-size: 0.625rem;
+  }
+
+  .image-size {
+    font-size: 0.5rem;
+  }
+
+  .image-caption p {
+    font-size: 0.625rem;
+  }
+}
+
 /* Responsive adjustments for article */
 @media (max-width: 768px) {
   .article-header {
@@ -739,3 +863,4 @@ body::before {
     font-size: 0.625rem;
   }
 }
+
