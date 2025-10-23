@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broken Access Control - Kh40zz_Blog.sh</title>
+    <meta name="description" content="Reading article... Loading content...">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="main-title">./Kh40zz_Blog.sh</h1>
+                <p class="subtitle">&gt; cat article.txt | less</p>
+                <p class="status">[STATUS] Article loaded successfully...</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Back Button -->
+            <section class="back-section">
+               <a href="/">
+                <button class="btn back-btn">
+                    $ cd ../
+                  </button>
+               </a>
+            </section>
+
+            <!-- Article Content -->
+            <article class="article-container">
+                <header class="article-header">
+                    <div class="article-meta">
+                        <div class="article-tags">
+                            <span class="tag">broken_access_control</span>
+                            <span class="tag">bug_bounty</span>
+                            <span class="tag">hacking_web</span>
+                        </div>
+                        <span class="article-date">2025.10.23</span>
+                        <span class="read-time">9 minutes</span>
+                    </div>
+                    <h1 class="article-title">Broken Access Control</h1>
+                    <p class="article-subtitle">How hackers can bypass or access to restricted actions or resources</p>
+                </header>
+
+                <div class="article-content">
+                    <div class="terminal-box">
+                        <p>&gt; GET /collection/2025/broken-access-control/</p>
+                        <p>&gt; Host: kh40zz.github.io</p>
+                        <p>&gt; 200 OK</p>
+                        <p>&gt; Set-Cookie: session=pwned; SameSite=Strict; Secure; HttpOnly</p>
+                    </div>
+
+                    <div class="article-text">
+                        <h2>Introduction</h2>
+                        <br>
+                        <p>Most of the modern web applications have some functions or resources which ones are only able to be executed or accessed by administrators, these are at this way by a concept called <strong> Access Control</strong>, but this thing can be hacked since it is configured by humans, and we all could mistake, being able to access to those resources or functions.</p>
+                        <br><br>
+                        <h2>DISCLAIMER</h2>
+                        <br>
+                        <p>Warning: the following content contains hacking techniques. These techniques may be used for offensive cybersecurity services such as bug bounty, red teaming, pentesting, etc. The author of this blog intends to show how to detect this vulnerability for the aforementioned services. The author of this blog is not responsible for any consequences that may arise from the use of this knowledge. Remember that cybercrime carries serious legal penalties in many countries and territories.</p>
+                        <div class="image-container">
+                        <img src="/assets/svg/warning.svg" height="300px" width="400px" alt="Warning Symbol">
+                        </div> 
+                        <h2> What is Access Control?</h2>
+                        <br>
+                        <p>Access Control is a technology which allow who can access to the resources and who can execute functions in the application, this was made to restrict the access to the special and privileged functions or privileged resources. </p>
+                        <br><br>
+                        <h2>Broken Access Control</h2>
+                        <br>
+                        <p>In this section, we are going to see how to exploit this vulnerability in some cases, but firstable, we must understand that any web application is a whole world, all the environments are different and all the ways to exploit the vulnerability is different, but the idea is always the same one.</p>
+                        <br><br>
+                        <h2>What is Broken Access Control?</h2>
+                        <br>
+                        <p>Broken Access Control is the vulnerability which occur in the Access Control, this can allow in some way execute actions that are forbidden for the Access Control or access to resources which are forbidden for the Access Control.</p>
+                        <div class="image-container">
+                            <img src="/assets/img/collection/2025/broken_access_control/BROKEN-ACCESS-CONTROL.png" height="400px" width="600px" alt="Warning Symbol">
+                            <p>Image source: <a href="https://ionix-497860167.imgix.net/wp-content/uploads/2025/03/BROKEN-ACCESS-CONTROL.png?auto=format%2Ccompress&ixlib=php-3.3.1&w=797">https://ionix-497860167.imgix.net/wp-content/uploads/2025/03/BROKEN-ACCESS-CONTROL.png?auto=format%2Ccompress&ixlib=php-3.3.1&w=797</a>
+                        </div>
+                       <br><br> 
+                        <h2>How Broken Access Control happen?</h2>
+                        <br>
+                        <p>A Broken Access Control could happen when you can control the actions of your user or role with the input of them, or when there is a bad Access Control Policy to the resources by a mistake or an omission. We are going to divide the explanation in two, in Broken Access Control with resources and Broken Access Control with actions.</p>
+                        <br><br>        
+                        <h2>Broken Access Control toward resources</h2>
+                        <br>
+                        <p>To do a Broken Access Control toward resources, you must do good research of them, you can do this with web crawling or google dorking. Once you have the resource, you can try and access to it, if there is a bad policy, you could access to it, and there could be important files if it is a directory like backups, credentials or the own database. You can try and search google dorks on <a href="https://www.exploit-db.com/google-hacking-database">https://www.exploit-db.com/google-hacking-database</a> and do web crawling with <a href="https://github.com/binux/pyspider"></a> <a href="https://github.com/binux/pyspider">https://github.com/binux/pyspider</a>.</p>
+                        <div class="image-container">
+                            <img src="/assets/img/collection/2025/broken_access_control/example.png" height="600px" width="500px" alt="Warning Symbol">
+                        </div>
+                        <br><br>
+                        <h2>Broken Access Control toward actions</h2>
+                        <br>
+                        <p>To do a Broken Access Control toward actions, we must try and control the actions of other users from our user, we are going to look how is this possible by misconfigurations and trying to do a bypass to those policies with different headers from the HTTP protocol.</p>
+                        <br><br>
+                        <h2>Broken Access Control from misconfiguration</h2>
+                        <br>
+                        <p>Broken Access Control happen by bad policy and misconfigurations, for example, suppose that a website to change the roles of the platform is denied to normal users with POST request:</p>
+                        <br>
+                        <div class="terminal-box">
+                        <p>
+                        DENY: POST, /admin/users/administrators/changeRoles, clients
+                        </p>
+                        </div>
+                        <br>
+                        <p>But the <strong>/admin/users/administrators/changeRoles</strong> resource also accept GET requests, allowing to execute a Broken Access Control to this source. You just have to change the request to GET instead of POST.</p>
+                        <br>
+                        <div class="terminal-box">
+                        <p>
+                        GET /admin/users/administrators/changeRoles?username=carlos&role=admin HTTP/2 <br>
+                        Host: insecure-website.com <br>
+                        ...
+                        </p>
+                        <br>
+                        </div> 
+                        <h2>Broken Access Control from no standard headers</h2>
+                        <br>
+                        <p>Some headers are not part of the standard but HTTP Servers must accept them because there could be obsoleted clients or just for compatibility, but the own fact that they are not part of the standard, so many developers forget add those headers in the Access Control policies, allowing perform an Broken Access Control.</p>
+                        <br><br>
+                        <h2>X-Original-Url client header</h2>
+                        <br>
+                        <p>The X-Original-Url allows the path's control of the request, for example, suppose we are going to send a request to <strong>/admin.php</strong>, we could do it like this with this header:</p>
+                        <br>
+                        <div class="terminal-box">
+                        <p>
+                        GET / HTTP/2   
+                        <br> Host: insecure-website.com
+                        <br> X-Original-Url: /products
+                        <br>...
+                        </p>
+                        </div>  
+                        <br>
+                        <p>But we can insert the parameters to it in this way too, allowing send a full HTTP GET Request:</p>
+                        <br>                       
+                        <div class="terminal-box">
+                        <p>
+                        GET ?id=1 HTTP/2   
+                        <br> Host: insecure-website.com
+                        <br> X-Original-Url: /products
+                        <br>...
+                        </p>
+                        </div>
+                        <br>
+                        <p>The website could not allow this:</p>
+                        <br>
+                        <div class="terminal-box">
+                        <p>
+                        GET /admin.php?changePassword=PWNED19aD9DA%40 HTTP/2
+                        <br>Host: insecure-website.com             
+                        <br>...
+                        </p>
+                        </div>
+                        <br>
+                        <p>But allow this:</p>
+                        <br>
+                        <div class="terminal-box">
+                        <p>
+                          GET ?changePassword=PWNED19aD9DA%40 HTTP/2
+                          <br>Host: insecure-website.com
+                          <br>X-Original-Url: /admin.php
+                        </p>
+                        </div>
+                        <br><br>
+                        <h3>X-Rewrite-Url client header</h3>
+                        <br>
+                        <p>Same as  the last header, this allow us make a bypass if it is allowed in the BackEnd, this is other no standard header which as the name says, rewrite the path of the  request, let's look how it works as the last examples:</p>
+                        <br>
+                        <p>The web server  could not accept this:</p>
+                        <div class="terminal-box">
+                        <p>
+                        GET /admin.php?changePassword=PWNED19aD9DA%40 HTTP/2
+                        <br>Host: insecure-website.com
+                        <br>...
+                        </p>
+                    </div>
+                    <br>
+                    <p>But ending up accept this since it only accept the path that is in the own request since not check which paths are in the headers:</p>
+                    <br>
+                       <div class="terminal-box">
+                        <p>
+                        GET ?changePassword=PWNED19aD9DA%40 HTTP/2
+                        <br>Host: insecure-website.com
+                        <br>X-Rewrite-Url: /admin.php 
+                        <br>...
+                        </p>
+                       </div>
+                       <br><br>
+                       <h2>Conclusion</h2>
+                       <br>
+                       <p>Broken Access Control is a pretty common vulnerability, which allows the attacker do privileged actions or access to restricted resources, making this something pretty critical if it is well exploited, to avoid this vulnerability, developer must be pretty careful with the permissions and not allow any type of access to the actions or resources, even the no stand ways.</p>
+                       <br><br>
+                    </div>
+
+                <footer class="article-footer">
+                    <div class="article-navigation">
+                        <a href="/">
+                          <button  class="btn-ghost">
+                            &lt; Back to Terminal
+                          </button>
+                        </a>
+                        <div class="article-share">
+                            <span class="share-text">&gt; By Kh40zz</span>
+                        </div>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+            &gt; © 2025 https://kh40zz.github.io. All content rights reserved. <br> 
+            &gt; © 2025 https://kh40zz.github.io. Based on "Terminal Blog v1.0" by
+                <a href="https://nctnetwork.co.uk" target="_blank" rel="noopener noreferrer" class="footer-link">
+                    NCTNetwork
+                </a> <br>
+                &gt; @ 2025 Customized By <a href="https://github.com/kh40zz" rel="noopener noreferrer" class="footer-link">Kh40zz</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -90,42 +90,27 @@ dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
             </section>
 
             <!-- Added search and filter controls -->
+            <center>
             <section class="controls-section">
                 <div class="controls-container">
                     <div class="search-container">
-                        <h3 class="control-title">&gt; grep -i "search_term" ~/memories/*</h3>
+                        <h3 class="control-title">&gt; grep -i "search_term" ~/posts/*</h3>
                         <input 
                             type="text" 
                             id="searchInput" 
-                            placeholder="search memories..." 
+                            placeholder="search posts..." 
                             class="search-input"
                         >
                     </div>
                     
-                    <div class="filter-container">
-                        <h3 class="control-title">&gt; filter --by-tag</h3>
-                        <div class="tag-filters">
-                            <button class="tag-filter active" data-tag="all">[ALL]</button>
-                             <button class="tag-filter active" data-tag="all">hacking_web</button>
-                              <button class="tag-filter active" data-tag="all">bug_bounty</button>
-                               <button class="tag-filter active" data-tag="all">sqli</button>
-                        </div>
-                    </div>
 
-                    <!-- Added year filter section -->
-                    <div class="filter-container">
-                        <h3 class="control-title">&gt; filter --by-year</h3>
-                        <div class="year-filters">
-                            <button class="year-filter active" data-year="all">[ALL YEARS]</button>
-                            <button class="year-filter active" data-year="all">2025</button>
-                        </div>
-                    </div>
                 </div>
             </section>
+            <center>
 
             <!-- Featured Posts -->
             <section class="posts-section">
-                <h2 class="posts-title">&gt; ls -la ~/recent_memories/</h2>
+                <h2 class="posts-title">&gt; ls -la ~/recent_posts/</h2>
                 <div class="posts-grid" id="postsGrid">
                                      
                 
@@ -151,6 +136,26 @@ dX.    9Xb      .dXb    __                         __    dXb.     dXP     .Xb
                         </article>
                     </a>
 
+                    <a href="/collection/2025/broken-access-control/">
+                        <article class="card" data-tags="hacking_web,broken_access_control,bug_bounty " data-year="2025" data-title="Broken Access Control" data-excerpt="How hackers can bypass or access to restricted actions or resources">
+                            <header class="card-header">
+                                <div class="card-meta">
+                                    <span class="badge">hacking_web</span>
+                                </div>
+                                <h3 class="card-title">Broken Access Control</h3>
+                                <p class="card-date">2025.10.23</p>
+                            </header>
+                            <div class="card-content">
+                                <div class="card-tags">
+                                    <span class="tag">hacking_web</span>
+                                    <span class="tag">broken_access_control</span>
+                                    <span class="tag">bug_bounty</span>
+                                </div>
+                                <p class="card-excerpt">How to do a Broken Access Control</p>
+                                <button class="btn-ghost">&gt; GET /collection/2025/broken-access-control</button>
+                            </div>
+                        </article>
+                    </a>
                 
                 </div>
 
